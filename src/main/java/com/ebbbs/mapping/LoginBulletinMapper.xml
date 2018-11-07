@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebbbs.dao.LoginBulletinMapper">
+
+	<sql id="baseColumn">
+    	f_id, f_large_area, f_area_service, f_channel, f_type, f_content, f_effective_time
+	</sql>
+
+	<resultMap id="BaseBulletinMap" type="com.ebbbs.entity.LoginBulletin">
+	    <id column="f_id" property="id"/>
+	    <result column="f_large_area" property="largeArea"/>
+	    <result column="f_area_service" property="areaService"/>
+	    <result column="f_channel" property="channel"/>
+	    <result column="f_type" property="type"/>
+	    <result column="f_content" property="content"/>
+	    <result column="f_effective_time" property="effectiveTime"/>
+	    <result column="f_creator" property="creator"/>
+	    <result column="f_gmt_create" property="gmtCreate"/>
+	    <result column="f_updater" property="updater"/>
+	    <result column="f_gmt_create" property="gmtModified"/>
+  	</resultMap>
+
+	<select id="listLoginBulletin" resultMap="BaseBulletinMap">
+		SELECT 
+		<include refid="baseColumn" />
+		FROM t_login_bulletin
+		<where>
+			<if test="largeArea!=null and largeArea!=''">
+   			AND f_large_area = #{largeArea} 
+   			</if>
+   			<if test="areaService!=null and areaService!=''">
+   			AND f_area_service = #{areaService}
+   			</if>
+   			<if test="channel!=null and channel!=''">
+   			AND f_channel = #{channel}
+   			</if>
+		</where>
+	</select>
+	
+	<insert id="insertLoginBulletin" parameterType="com.ebbbs.entity.LoginBulletin">
+		INSERT INTO t_login_bulletin (
+			f_type,
+			f_content,
+			f_effective_time,
+			f_large_area,
+			f_area_service,
+			f_channel,
+			f_creator,
+   			f_gmt_create,
+    		f_updater,
+    		f_gmt_modified
+		) VALUES (
+			#{type},
+			#{content},
+			#{effectiveTime},
+			#{largeArea},
+			#{areaService},
+			#{channel},
+			#{creator},
+			#{gmtCreate},
+			#{updater},
+			#{gmtModified}
+		)
+	</insert>
+	
+	<delete id="deleteLoginBulletinById" parameterType="java.lang.Integer">
+		DELETE FROM t_login_bulletin WHERE f_id = #{id}
+	</delete>
+	
+	<update id="updateLoginBulletinById" parameterType="com.ebbbs.entity.LoginBulletin">
+		UPDATE t_login_bulletin
+		<set>
+			<if test="type != '' and type != null">
+		      f_type = #{type},
+		    </if>
+		    <if test="content != '' and content != null">
+		      f_content = #{content},
+		    </if>
+		    <if test="effectiveTime != '' and effectiveTime != null">
+		      f_effective_time = #{effectiveTime},
+		    </if>
+		    <if test="largeArea != '' and largeArea != null">
+		      f_large_area = #{largeArea},
+		    </if>
+		    <if test="areaService != '' and areaService != null">
+		      f_area_service = #{areaService},
+		    </if>
+		    <if test="channel != '' and channel != null">
+		      f_channel = #{channel},
+		    </if>
+		    <if test="updater != '' and updater != null">
+		      f_updater = #{updater},
+		    </if>
+		    <if test="gmtModified != null">
+		      f_gmt_modified = #{gmtModified},
+		    </if>
+	    </set>
+	    WHERE f_id = #{id}
+	</update>
+
+</mapper>
